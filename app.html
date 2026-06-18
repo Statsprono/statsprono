@@ -261,7 +261,7 @@ document.getElementById('pickForm').addEventListener('submit', async (e) => {
   const odds = parseFloat(document.getElementById('oddsInput').value);
   const stake = parseFloat(document.getElementById('stakeInput').value);
 
-  const { error } = await supabase.from('picks').insert({
+  const { error } = await sb.from('picks').insert({
     user_id: currentUser.id,
     bookmaker: selectedBookmaker,
     bet_type: betType + ' — ' + matchLabel,
