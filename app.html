@@ -170,7 +170,7 @@ select{cursor:pointer;appearance:none;background-image:url('data:image/svg+xml;u
 <script>
 const SUPABASE_URL = 'https://lyfhbmponpdkkfbwkxkx.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_jgqVoO3xdkHa6WepwtF6UQ_svlUMC03';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentUser = null;
 let selectedBookmaker = null;
@@ -181,7 +181,7 @@ const appView = document.getElementById('appView');
 const signoutBtn = document.getElementById('signoutBtn');
 
 async function init() {
-  const { data: { session } } = await supabase.auth.getSession();
+  const { data: { session } } = await sb.auth.getSession();
   if (session) {
     currentUser = session.user;
     showApp();
@@ -215,7 +215,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
   btn.textContent = 'Envoi en cours...';
   msg.className = 'login-msg';
 
-  const { error } = await supabase.auth.signInWithOtp({
+  const { error } = await sb.auth.signInWithOtp({
     email: email,
     options: { emailRedirectTo: window.location.href }
   });
@@ -233,7 +233,7 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
 });
 
 signoutBtn.addEventListener('click', async () => {
-  await supabase.auth.signOut();
+  await sb.auth.signOut();
   currentUser = null;
   showLogin();
 });
@@ -337,7 +337,7 @@ async function loadPicks() {
   }).join('');
 }
 
-supabase.auth.onAuthStateChange((event, session) => {
+sb.auth.onAuthStateChange((event, session) => {
   if (event === 'SIGNED_IN' && session) {
     currentUser = session.user;
     showApp();
