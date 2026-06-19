@@ -65,19 +65,19 @@ input::placeholder{color:var(--muted)}
 .section-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.4px}
 .section-note{color:var(--muted);font-size:12px}
 .brand-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-.brand-btn{height:66px;border:1px solid var(--border);background:var(--card);border-radius:16px;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;transition:.18s}
-.brand-btn.selected{border-color:var(--green);background:rgba(0,232,122,.09);color:var(--green)}
-.brand-img{max-width:95px;max-height:28px;object-fit:contain}
+.brand-btn{height:68px;border:1px solid var(--border);background:var(--card);border-radius:16px;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.18s;overflow:hidden;padding:8px}
+.brand-btn.selected{border-color:var(--green);background:rgba(0,232,122,.09);color:var(--green);box-shadow:0 0 0 2px rgba(0,232,122,.12) inset}
+.brand-img{width:100%;height:100%;max-width:132px;max-height:48px;object-fit:contain;display:block}
 .brand-fallback{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:var(--text)}
-.brand-mini{font-size:10px;color:var(--muted)}
+.brand-mini{display:none}
 
 .match-feed{display:grid;gap:12px}
 .match-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px;overflow:hidden}
 .match-card-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}
-.match-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;line-height:1.15}
+.match-title{font-family:'Syne',sans-serif;font-size:16.5px;font-weight:800;line-height:1.18;letter-spacing:-.2px}
 .match-meta{color:var(--muted);font-size:12px;margin-top:5px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 .comp-logo{width:22px;height:22px;object-fit:contain;border-radius:5px;background:rgba(255,255,255,.05);padding:2px}
-.match-score{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--green);white-space:nowrap}
+.match-score{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--green);white-space:nowrap}
 .match-input-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 12px}
 .inline-field label{display:block;font-size:10px;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px}
 .outcome-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -130,9 +130,8 @@ input::placeholder{color:var(--muted)}
 .mini-btn.red:hover{border-color:var(--red);color:var(--red)}
 
 .bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:100;display:none;grid-template-columns:repeat(4,1fr);background:rgba(8,12,10,.94);backdrop-filter:blur(14px);border-top:1px solid var(--border);padding:7px 4px 8px}
-.bottom-nav a{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--muted);font-size:10px}
+.bottom-nav a{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;font-weight:700;padding:9px 4px}
 .bottom-nav a.active{color:var(--green)}
-.bottom-icon{font-size:18px}
 
 @media(max-width:760px){
   .top-nav{padding:12px 14px}
@@ -142,11 +141,11 @@ input::placeholder{color:var(--muted)}
   .big-roi{font-size:38px}
   .stat-pills{grid-template-columns:repeat(2,1fr)}
   .brand-row{grid-template-columns:repeat(3,1fr);gap:8px}
-  .brand-btn{height:58px;border-radius:14px}
-  .brand-img{max-width:75px;max-height:24px}
+  .brand-btn{height:60px;border-radius:14px;padding:7px}
+  .brand-img{max-width:105px;max-height:42px}
   .match-input-row{grid-template-columns:1fr 1fr}
   .match-card{border-radius:16px;padding:13px}
-  .match-title{font-size:17px}
+  .match-title{font-size:15.5px}
   .outcome-main{font-size:20px}
   .analysis-grid{grid-template-columns:1fr}
   .bottom-nav{display:grid}
@@ -218,9 +217,9 @@ input::placeholder{color:var(--muted)}
       </div>
 
       <div class="brand-row" id="bookmakerRow">
-        <button type="button" class="brand-btn" data-bk="Winamax"><img class="brand-img" src="winamax.png" alt="Winamax" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="brand-fallback" style="display:none">Winamax</span><span class="brand-mini">bookmaker</span></button>
-        <button type="button" class="brand-btn" data-bk="Unibet"><img class="brand-img" src="unibet.png" alt="Unibet" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="brand-fallback" style="display:none">UNIBET</span><span class="brand-mini">bookmaker</span></button>
-        <button type="button" class="brand-btn" data-bk="Betclic"><img class="brand-img" src="betclic.png" alt="Betclic" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="brand-fallback" style="display:none">Betclic</span><span class="brand-mini">bookmaker</span></button>
+        <button type="button" class="brand-btn" data-bk="Winamax"><img class="brand-img" src="winamax.png?v=3" alt="Winamax" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="brand-fallback" style="display:none">Winamax</span></button>
+        <button type="button" class="brand-btn" data-bk="Unibet"><img class="brand-img" src="unibet.png?v=3" alt="Unibet" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="brand-fallback" style="display:none">UNIBET</span></button>
+        <button type="button" class="brand-btn" data-bk="Betclic"><img class="brand-img" src="betclic.png?v=3" alt="Betclic" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span class="brand-fallback" style="display:none">Betclic</span></button>
       </div>
 
       <div class="section-note" id="matchHint" style="margin-bottom:10px">Chargement des matchs...</div>
@@ -239,7 +238,7 @@ input::placeholder{color:var(--muted)}
 
 <div class="cart" id="cart">
   <div class="cart-head">
-    <div class="cart-title">🛒 Sélections <span class="cart-count" id="cartCount">0</span></div>
+    <div class="cart-title">Sélections <span class="cart-count" id="cartCount">0</span></div>
     <button class="remove-btn" onclick="clearCart()">Vider</button>
   </div>
   <div class="cart-list" id="cartList"></div>
@@ -250,10 +249,10 @@ input::placeholder{color:var(--muted)}
 </div>
 
 <nav class="bottom-nav">
-  <a href="#stats" class="active"><span class="bottom-icon">📈</span><span>Stats</span></a>
-  <a href="#betting"><span class="bottom-icon">🎯</span><span>Paris</span></a>
-  <a href="classement.html"><span class="bottom-icon">🏆</span><span>Classement</span></a>
-  <a href="devenir-tipster.html"><span class="bottom-icon">👤</span><span>Tipster</span></a>
+  <a href="#stats" class="active"><span>Stats</span></a>
+  <a href="#betting"><span>Paris</span></a>
+  <a href="classement.html"><span>Classement</span></a>
+  <a href="devenir-tipster.html"><span>Tipster</span></a>
 </nav>
 
 <script>
@@ -347,20 +346,20 @@ function renderMatchFeed(){
     const id=m.id, home=m.home_team||'Domicile', away=m.away_team||'Extérieur', comp=normalizeCompetitionName(m.competition), logo=getCompetitionLogo(comp), score=getScore(m);
     const scoreHtml=score?`<div class="match-score">${score.hs}-${score.as}</div>`:'';
     return `<article class="match-card" data-match="${id}">
-      <div class="match-card-top">
-        <div>
-          <div class="match-title">${home} - ${away}</div>
-          <div class="match-meta">${logo?`<img class="comp-logo" src="${logo}" alt="${comp}" onerror="this.style.display='none'">`:''}<span>${comp}</span><span>·</span><span>${formatDate(m)}</span></div>
-        </div>${scoreHtml}
-      </div>
-      <div class="match-input-row">
-        <div class="inline-field"><label>Cote prise</label><input type="number" class="odds-field" data-match="${id}" min="1" step="0.01" placeholder="1.85"></div>
-        <div class="inline-field"><label>Mise</label><input type="number" class="stake-field" data-match="${id}" min="0.5" step="0.5" value="1"></div>
-      </div>
-      <div class="outcome-grid">
-        <button class="outcome-btn" onclick="addToCart('${id}','1')"><span class="outcome-main">1</span><span class="outcome-sub">Domicile</span><span class="outcome-potential" id="pot-${id}-1">—</span></button>
-        <button class="outcome-btn" onclick="addToCart('${id}','X')"><span class="outcome-main">N</span><span class="outcome-sub">Nul</span><span class="outcome-potential" id="pot-${id}-X">—</span></button>
-        <button class="outcome-btn" onclick="addToCart('${id}','2')"><span class="outcome-main">2</span><span class="outcome-sub">Extérieur</span><span class="outcome-potential" id="pot-${id}-2">—</span></button>
+      <div class="match-date-strip">${formatDate(m)}</div>
+      <div class="match-main">
+        <div class="match-meta">${logo?`<img class="comp-logo" src="${logo}" alt="${comp}" onerror="this.style.display='none'">`:''}<span>${comp}</span></div>
+        <div class="match-title">${home} - ${away}</div>
+        ${scoreHtml}
+        <div class="outcome-grid">
+          <button class="outcome-btn" onclick="addToCart('${id}','1')"><span class="outcome-main">1</span><span class="outcome-sub">Domicile</span><span class="outcome-potential" id="pot-${id}-1">—</span></button>
+          <button class="outcome-btn" onclick="addToCart('${id}','X')"><span class="outcome-main">N</span><span class="outcome-sub">Nul</span><span class="outcome-potential" id="pot-${id}-X">—</span></button>
+          <button class="outcome-btn" onclick="addToCart('${id}','2')"><span class="outcome-main">2</span><span class="outcome-sub">Extérieur</span><span class="outcome-potential" id="pot-${id}-2">—</span></button>
+        </div>
+        <div class="match-input-row">
+          <div class="inline-field"><label>Cote...</label><input type="number" class="odds-field" data-match="${id}" min="1" step="0.01" placeholder="1.85"></div>
+          <div class="inline-field"><label>Mise...</label><input type="number" class="stake-field" data-match="${id}" min="0.5" step="0.5" value="1"></div>
+        </div>
       </div>
     </article>`;
   }).join('');
@@ -382,6 +381,8 @@ function addToCart(matchId,outcome){
   const key=`${matchId}-${selectedBookmaker}-${outcome}`;
   if(cart.some(i=>i.key===key)){ alert('Ce pari est déjà dans ton panier.'); return; }
   cart.push({key,matchId,outcome,odds,stake,bookmaker:selectedBookmaker});
+  const card=document.querySelector(`.match-card[data-match="${matchId}"]`);
+  if(card){card.classList.add('selected-pulse'); setTimeout(()=>card.classList.remove('selected-pulse'),450);}
   renderCart();
 }
 function renderCart(){
