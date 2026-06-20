@@ -53,10 +53,10 @@ input::placeholder{color:var(--muted)}
 .big-roi{font-family:'Syne',sans-serif;font-size:44px;line-height:1;font-weight:800}
 .big-roi.pos{color:var(--green)}.big-roi.neg{color:var(--red)}
 .hero-sub{color:var(--muted);font-size:13px;margin-top:6px}
-.stat-pills{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
-.pill{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:14px;padding:12px}
+.stat-pills{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:18px}
+.pill{background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:14px;padding:12px;min-width:0;overflow:hidden}
 .pill-label{font-size:10px;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px}
-.pill-value{font-family:'Syne',sans-serif;font-size:20px;font-weight:800}
+.pill-value{font-family:'Syne',sans-serif;font-size:clamp(16px,4vw,20px);font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.25px}
 .pill-value.pos{color:var(--green)}.pill-value.neg{color:var(--red)}
 .chart-wrap{margin-top:18px;background:rgba(0,0,0,.14);border:1px solid var(--border);border-radius:16px;padding:10px}
 #performanceChart{width:100%;height:180px;display:block}
@@ -139,7 +139,7 @@ input::placeholder{color:var(--muted)}
   .page{padding:18px 12px 112px;max-width:100%;overflow:hidden}
   .hero-card{padding:16px;border-radius:18px}
   .big-roi{font-size:38px}
-  .stat-pills{grid-template-columns:repeat(2,1fr)}
+  .stat-pills{grid-template-columns:repeat(2,minmax(0,1fr))}
   .brand-row{grid-template-columns:repeat(3,1fr);gap:8px}
   .brand-btn{height:60px;border-radius:14px;padding:7px}
   .brand-img{max-width:105px;max-height:42px}
@@ -361,7 +361,7 @@ function renderMatchFeed(){
         </div>
         <div class="match-input-row">
           <div class="inline-field"><label>Cote...</label><input type="number" class="odds-field" data-match="${id}" min="1" step="0.01" placeholder="1.85"></div>
-          <div class="inline-field"><label>Mise...</label><input type="number" class="stake-field" data-match="${id}" min="0.5" step="0.5" value="1"></div>
+          <div class="inline-field"><label>Mise CHF...</label><input type="number" class="stake-field" data-match="${id}" min="0.5" step="0.5" value="1"></div>
         </div>
       </div>
     </article>`;
@@ -371,7 +371,7 @@ function renderMatchFeed(){
 function updatePotentials(matchId){
   const odds=Number(document.querySelector(`.odds-field[data-match="${matchId}"]`)?.value||0);
   const stake=Number(document.querySelector(`.stake-field[data-match="${matchId}"]`)?.value||0);
-  ['1','X','2'].forEach(o=>{ const el=document.getElementById(`pot-${matchId}-${o}`); if(el) el.textContent=(odds&&stake)?`Gain ${ (odds*stake).toFixed(2)}u`:'—'; });
+  ['1','X','2'].forEach(o=>{ const el=document.getElementById(`pot-${matchId}-${o}`); if(el) el.textContent=(odds&&stake)?`Gain ${money(odds*stake,{decimals:2})}`:'—'; });
 }
 function displayOutcome(o){return o==='1'?'Domicile':o==='X'?'Nul':'Extérieur'}
 function addToCart(matchId,outcome){
@@ -394,7 +394,7 @@ function renderCart(){
   box.classList.toggle('open',cart.length>0);
   list.innerHTML=cart.map((item,idx)=>{
     const m=matchesCache.find(x=>String(x.id)===String(item.matchId));
-    return `<div class="cart-item"><div><div class="cart-item-main">${m?.home_team||'Domicile'} - ${m?.away_team||'Extérieur'} · ${displayOutcome(item.outcome)}</div><div class="cart-item-sub">${item.bookmaker} · cote ${item.odds} · mise ${item.stake}u · gain potentiel ${(item.odds*item.stake).toFixed(2)}u</div></div><button class="remove-btn" onclick="removeCartItem(${idx})">×</button></div>`
+    return `<div class="cart-item"><div><div class="cart-item-main">${m?.home_team||'Domicile'} - ${m?.away_team||'Extérieur'} · ${displayOutcome(item.outcome)}</div><div class="cart-item-sub">${item.bookmaker} · cote ${item.odds} · mise ${money(item.stake,{decimals:2})} · gain potentiel ${money(item.odds*item.stake,{decimals:2})}</div></div><button class="remove-btn" onclick="removeCartItem(${idx})">×</button></div>`
   }).join('');
 }
 function removeCartItem(i){cart.splice(i,1);renderCart()}
@@ -442,11 +442,11 @@ function renderStats(picks){
   const profit=settled.reduce((s,p)=>s+profitOf(p),0), roi=stake?(profit/stake)*100:0, won=settled.filter(p=>p.result==='won').length, wr=settled.length?(won/settled.length)*100:0;
   const total=picks.reduce((s,p)=>s+Number(p.stake||0),0), pending=picks.filter(p=>p.result==='pending').reduce((s,p)=>s+Number(p.stake||0),0);
   setText('mainRoi',settled.length?`${roi>0?'+':''}${roi.toFixed(1)}%`:'—',roi);
-  setText('statProfit',`${profit>0?'+':''}${profit.toFixed(2)}u`,profit);
-  setText('statInvested',`${total.toFixed(1)}u`,0); setText('statPending',`${pending.toFixed(1)}u`,0);
+  setText('statProfit',money(profit,{signed:true,decimals:2}),profit);
+  setText('statInvested',money(total,{decimals:1}),0); setText('statPending',money(pending,{decimals:1}),0);
   setText('statWinRate',settled.length?`${wr.toFixed(0)}%`:'—',0); setText('statCount',picks.length,0);
-  setText('statDrawdown',`${calcDrawdown(settled).toFixed(2)}u`,calcDrawdown(settled)*-1);
-  document.getElementById('mainSummary').textContent=settled.length?`${settled.length} paris réglés · ${pending.toFixed(1)}u encore en attente`:'Tes stats apparaissent après tes premiers résultats.';
+  setText('statDrawdown',money(calcDrawdown(settled),{decimals:2}),calcDrawdown(settled));
+  document.getElementById('mainSummary').textContent=settled.length?`${settled.length} paris réglés · ${money(pending,{decimals:1})} encore en attente`:'Tes stats apparaissent après tes premiers résultats.';
   renderCompetitionBoxes(settled); renderAdvice(picks,{settled,roi,profit,pending,stake,wr});
 }
 function setText(id,text,value){const el=document.getElementById(id); if(!el)return; el.textContent=text; el.className=el.className.replace(/\s?(pos|neg)/g,'')+(value>0?' pos':value<0?' neg':'');}
@@ -475,7 +475,7 @@ function renderPicks(picks){
   list.innerHTML=picks.slice(0,30).map(p=>{
     let cls='status-pending', txt='En attente'; if(p.result==='won'){cls='status-won';txt='Gagné'} if(p.result==='lost'){cls='status-lost';txt='Perdu'} if(p.result==='void'){txt='Annulé'}
     const comp=competitionFromBetType(p.bet_type), logo=getCompetitionLogo(comp), actions=p.result==='pending'?`<div class="pick-actions"><button class="mini-btn" onclick="updatePickResult('${p.id}','void')">Annuler</button><button class="mini-btn" onclick="updatePickResult('${p.id}','won')">Forcer gagné</button><button class="mini-btn red" onclick="updatePickResult('${p.id}','lost')">Forcer perdu</button></div>`:'';
-    return `<div class="pick-row"><div><div class="pick-title-line">${logo?`<img class="pick-competition-logo" src="${logo}" onerror="this.style.display='none'">`:''}<div class="pick-match">${p.bet_type}</div></div><div class="pick-meta">${p.bookmaker} · cote ${p.odds} · mise ${p.stake}u ${p.result!=='pending'?`· profit ${profitOf(p).toFixed(2)}u`:''}</div>${actions}</div><span class="pick-status ${cls}">${txt}</span></div>`
+    return `<div class="pick-row"><div><div class="pick-title-line">${logo?`<img class="pick-competition-logo" src="${logo}" onerror="this.style.display='none'">`:''}<div class="pick-match">${p.bet_type}</div></div><div class="pick-meta">${p.bookmaker} · cote ${p.odds} · mise ${money(p.stake,{decimals:2})} ${p.result!=='pending'?`· profit ${money(profitOf(p),{signed:true,decimals:2})}`:''}</div>${actions}</div><span class="pick-status ${cls}">${txt}</span></div>`
   }).join('');
 }
 async function updatePickResult(id,result){const {error}=await sb.from('picks').update({result}).eq('id',id).eq('user_id',currentUser.id); if(error){console.error(error);alert('Modification impossible. Vérifie les policies UPDATE.');return} await loadPicks();}
