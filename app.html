@@ -74,18 +74,18 @@ input::placeholder{color:var(--muted)}
 .match-feed{display:grid;gap:12px}
 .match-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px;overflow:hidden}
 .match-card-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px}
-.match-title{font-family:'Syne',sans-serif;font-size:16.5px;font-weight:800;line-height:1.18;letter-spacing:-.2px}
+.match-title{font-family:'Syne',sans-serif;font-size:15.2px;font-weight:800;line-height:1.18;letter-spacing:-.2px}
 .match-meta{color:var(--muted);font-size:12px;margin-top:5px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 .comp-logo{width:22px;height:22px;object-fit:contain;border-radius:5px;background:rgba(255,255,255,.05);padding:2px}
-.match-score{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--green);white-space:nowrap}
+.match-score{font-family:'Syne',sans-serif;font-size:23px;font-weight:800;color:var(--green);white-space:nowrap;margin-top:6px}
 .match-input-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 12px}
 .inline-field label{display:block;font-size:10px;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px}
-.outcome-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.outcome-btn{background:var(--dark2);border:1px solid var(--border);border-radius:14px;color:var(--text);padding:12px 6px;cursor:pointer;transition:.18s;text-align:center}
+.outcome-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.outcome-btn{background:var(--dark2);border:1px solid var(--border);border-radius:12px;color:var(--text);padding:9px 5px;cursor:pointer;transition:.18s;text-align:center}
 .outcome-btn:hover{border-color:rgba(0,232,122,.35)}
-.outcome-main{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;display:block;line-height:1}
-.outcome-sub{font-size:11px;color:var(--muted);display:block;margin-top:4px}
-.outcome-potential{font-size:11px;color:var(--green);display:block;margin-top:3px}
+.outcome-main{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;display:block;line-height:1}
+.outcome-sub{font-size:10px;color:var(--muted);display:block;margin-top:3px}
+.outcome-potential{font-size:10px;color:var(--green);display:block;margin-top:2px}
 .empty-state{background:var(--card);border:1px dashed var(--border);border-radius:16px;text-align:center;padding:34px 20px;color:var(--muted);font-size:14px}
 
 .cart{position:fixed;left:50%;bottom:74px;transform:translateX(-50%);width:min(620px,calc(100vw - 24px));z-index:80;background:#0d140d;border:1px solid rgba(0,232,122,.26);box-shadow:0 24px 80px rgba(0,0,0,.55);border-radius:18px;padding:12px;display:none}
@@ -99,7 +99,7 @@ input::placeholder{color:var(--muted)}
 .cart-item-sub{font-size:12px;color:var(--muted)}
 .remove-btn{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:9px;padding:6px 8px;cursor:pointer}
 .remove-btn:hover{border-color:var(--red);color:var(--red)}
-.cart-actions{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px}
+.cart-actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:10px}
 .ghost-btn{background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:12px;padding:12px;cursor:pointer}
 
 .panel{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:18px}
@@ -145,8 +145,8 @@ input::placeholder{color:var(--muted)}
   .brand-img{max-width:105px;max-height:42px}
   .match-input-row{grid-template-columns:1fr 1fr}
   .match-card{border-radius:16px;padding:13px}
-  .match-title{font-size:15.5px}
-  .outcome-main{font-size:20px}
+  .match-title{font-size:14.5px}
+  .outcome-main{font-size:18px}
   .analysis-grid{grid-template-columns:1fr}
   .bottom-nav{display:grid}
 }
@@ -242,8 +242,7 @@ input::placeholder{color:var(--muted)}
     <button class="remove-btn" onclick="clearCart()">Vider</button>
   </div>
   <div class="cart-list" id="cartList"></div>
-  <div class="cart-actions">
-    <button class="ghost-btn" onclick="clearCart()">Annuler</button>
+  <div class="cart-actions single">
     <button class="submit-btn" id="confirmCartBtn" onclick="confirmCart()">Valider mes paris</button>
   </div>
 </div>
@@ -305,24 +304,24 @@ async function loadMatches(){
   const feed=document.getElementById('matchFeed'), hint=document.getElementById('matchHint');
   if(error){ console.error(error); hint.textContent='Impossible de charger les matchs Supabase.'; return; }
   matchesCache=(data||[]).sort((a,b)=>getMatchTime(a)-getMatchTime(b));
-  hint.textContent=matchesCache.length ? `${matchesCache.length} matchs chargés depuis Supabase.` : 'Aucun match disponible. Vérifie n8n.';
+  hint.textContent=matchesCache.length ? `${matchesCache.length} matchs dans Supabase · fil limité aux 4 derniers jours et 5 prochains jours.` : 'Aucun match disponible. Vérifie n8n.';
   renderMatchFeed();
 }
 function getMatchTime(m){
-  const keys=['utc_date','match_date','kickoff','kickoff_time','date','scheduled_at'];
+  const keys=['utc_date','utcDate','match_date','matchDate','kickoff','kickoff_time','date','scheduled_at','start_time','startTime'];
   for(const k of keys){ if(m[k]){ const t=new Date(m[k]).getTime(); if(!Number.isNaN(t)) return t; } }
   return 0;
 }
 function formatDate(m){
-  const keys=['utc_date','match_date','kickoff','kickoff_time','date','scheduled_at'];
+  const keys=['utc_date','utcDate','match_date','matchDate','kickoff','kickoff_time','date','scheduled_at','start_time','startTime'];
   for(const k of keys){ if(m[k]){ const d=new Date(m[k]); if(!Number.isNaN(d.getTime())) return d.toLocaleString('fr-CH',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}); } }
   return 'Date à confirmer';
 }
 function normalizeCompetitionName(name){return name?String(name).trim():'Compétition inconnue'}
 function getCompetitionLogo(name){const code=COMPETITION_CODES[normalizeCompetitionName(name)];return code?`https://crests.football-data.org/${code}.png`:''}
 function getScore(m){
-  const hKeys=['home_score','score_home','home_goals','full_time_home','ft_home'];
-  const aKeys=['away_score','score_away','away_goals','full_time_away','ft_away'];
+  const hKeys=['home_score','score_home','home_goals','full_time_home','ft_home','homeTeamScore','home_team_score','home_result','goals_home'];
+  const aKeys=['away_score','score_away','away_goals','full_time_away','ft_away','awayTeamScore','away_team_score','away_result','goals_away'];
   let hs=null, as=null;
   for(const k of hKeys){ if(m[k]!==undefined && m[k]!==null && m[k] !== '') hs=Number(m[k]); }
   for(const k of aKeys){ if(m[k]!==undefined && m[k]!==null && m[k] !== '') as=Number(m[k]); }
@@ -339,9 +338,13 @@ function resultFromScore(m){
 function renderMatchFeed(){
   const feed=document.getElementById('matchFeed');
   if(!matchesCache.length){ feed.innerHTML='<div class="empty-state">Aucun match trouvé.</div>'; return; }
-  const now=Date.now(), fourDays=4*24*60*60*1000;
-  let display=matchesCache.filter(m=>{ const t=getMatchTime(m); return !t || Math.abs(t-now)<fourDays || !isFinished(m); }).slice(0,60);
-  if(!display.length) display=matchesCache.slice(-60);
+  const now=Date.now(), pastWindow=4*24*60*60*1000, futureWindow=5*24*60*60*1000;
+  let display=matchesCache.filter(m=>{
+    const t=getMatchTime(m);
+    if(!t) return true;
+    return t >= now - pastWindow && t <= now + futureWindow;
+  }).slice(0,70);
+  if(!display.length) display=matchesCache.slice(0,40);
   feed.innerHTML=display.map(m=>{
     const id=m.id, home=m.home_team||'Domicile', away=m.away_team||'Extérieur', comp=normalizeCompetitionName(m.competition), logo=getCompetitionLogo(comp), score=getScore(m);
     const scoreHtml=score?`<div class="match-score">${score.hs}-${score.as}</div>`:'';
