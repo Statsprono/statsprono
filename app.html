@@ -489,7 +489,25 @@ function drawPerformanceChart(picks){
   ctx.strokeStyle=cum>=0?'#00E87A':'#FF4444';ctx.lineWidth=3;ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(sx(i),sy(p)):ctx.moveTo(sx(i),sy(p)));ctx.stroke();
   ctx.fillStyle=cum>=0?'#00E87A':'#FF4444';pts.forEach((p,i)=>{ctx.beginPath();ctx.arc(sx(i),sy(p),3,0,Math.PI*2);ctx.fill()});
 }
-sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_IN'&&session){currentUser=session.user;showApp();}});
+sb.auth.onAuthStateChange((event,session)=>{
+  if(event==='SIGNED_IN'&&session){
+    currentUser=session.user;
+    showApp();
+  }
+});
+
+function money(value, opts = {}) {
+  const decimals = opts.decimals ?? 2;
+  const signed = opts.signed ?? false;
+  const number = Number(value || 0);
+
+  return (
+    (signed && number > 0 ? '+' : '') +
+    number.toFixed(decimals) +
+    ' €'
+  );
+}
+
 init();
 </script>
 </body>
