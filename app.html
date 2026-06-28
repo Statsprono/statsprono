@@ -278,9 +278,43 @@ async function init() {
   session ? (currentUser = session.user, showApp()) : showLogin();
 }
 function showLogin(){ loadingView.style.display='none';loginView.style.display='block';appView.style.display='none';signoutBtn.style.display='none'; }
+  async function ensureProfile() {
+  if (!currentUser) return;
+
+  const { data: existing, error: selectError } = await sb
+    .from('profiles')
+    .select('id')
+    .eq('id', currentUser.id)
+    .maybeSingle();
+
+  if (selectError) {
+    console.error('Erreur lecture profil:', selectError);
+    return;
+  }
+
+  if (!existing) {
+    const { error: insertError } = await sb
+      .from('profiles')
+      .insert({
+        id: currentUser.id,
+        email: currentUser.email,
+        is_tipster: false,
+        verified: false,
+        public_profile: false
+      });
+
+    if (insertError) {
+      console.error('Erreur création profil:', insertError);
+    }
+  }
+}
 async function showApp(){
   loadingView.style.display='none';loginView.style.display='none';appView.style.display='block';signoutBtn.style.display='inline-block';mobileSignoutBtn.style.display='inline-block';
-  await loadMatches(); await loadPicks(); await autoSettlePendingPicks(); await loadPicks();
+  await ensureProfile();
+await loadMatches();
+await loadPicks();
+await autoSettlePendingPicks();
+await loadPicks();
 }
 document.getElementById('loginForm').addEventListener('submit', async e=>{
   e.preventDefault();
